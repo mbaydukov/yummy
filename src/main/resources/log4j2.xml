@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN_SHORT">
+            %d{HH:mm:ss.SSS} %highlight{%-5level}{STYLE=Logback}[%thread] %highlight{%logger.%M} - %msg%n
+        </Property>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread] %logger.%M - %msg%n
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN_SHORT}"/>
+        </Console>
+
+        <RollingFile name="FileAppender"
+                     fileName="logs/yummy-recipes.log"
+                     filePattern="logs/yummy-recipes-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+        <Logger name="org.yummy" level="ALL"/>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,33 @@
+version: '3.7'
+
+networks:
+  yummy-recipes-net:
+    name: yummy-recipes-net
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.6.2
+    environment:
+      - discovery.type=single-node
+    networks:
+      - yummy-recipes-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  yummy-recipes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    networks:
+      - yummy-recipes-net
+    command:
+      - java -jar yummy-recipes.jar
+
