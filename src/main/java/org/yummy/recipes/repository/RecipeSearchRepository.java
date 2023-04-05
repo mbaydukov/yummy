@@ -33,7 +33,7 @@ public class RecipeSearchRepository {
      * Search recipes by structured query request
      *
      * @param recipeQuery structured query request
-     * @return collection of recipes that match the request
+     * @return collection of recipes that match the request. The result collection is sorted by Recipe.creationTime parameter in descending order
      */
     public List<Recipe> search(RecipeQuery recipeQuery){
         val queryBuilder = QueryBuilders.boolQuery();
