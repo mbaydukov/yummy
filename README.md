@@ -32,7 +32,7 @@ available recipes based on one or more of the following criteria:
 
 -----------------------------------------------------------------
 
-# Installation
+# Implementation
 
 ### Disclaimer
 The project does not provide any authentication methods, nor reliability and scalability out of the box. 
