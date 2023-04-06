@@ -39,7 +39,7 @@ class RecipeManagementControllerTest {
     private int port;
 
     @Container
-    private static ElasticsearchContainer container = new ElasticsearchContainer(
+    private static final ElasticsearchContainer container = new ElasticsearchContainer(
             DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch:7.6.2")) //
             .withReuse(true);
 
