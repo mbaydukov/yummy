@@ -16,19 +16,21 @@ import java.util.List;
 @Builder
 public class RecipeQuery {
 
-    @Schema(description = "Is the recipe vegetarian.")
+    @Schema(description = "Is the recipe vegetarian. TRUE - vegetarian, FALSE - non-vegetarian, NULL - filter is not applied")
     private Boolean vegetarian;
 
-    @Schema(description = "Name of ingredient")
+    @Schema(description = "Number of portions. Exact match is used. NULL - filter is not applied")
     private Integer numberOfServings;
 
-    @Schema(description = "List of ingredients that must be present")
+    @Schema(description = "List of ingredients that must be present. Case insensitive. Complete phrases match is used")
     private List<Ingredient> includedIngredients;
 
-    @Schema(description = "List of ingredients that must be absent")
+    @Schema(description = "List of ingredients that must be absent. Case insensitive. Complete phrases match is used")
     private List<Ingredient> excludedIngredients;
 
-    @Schema(description = "Keyword that must be present within recipe cooking instruction. Special characters '*' and '?' are not acceptable and will be removed from the keyword")
+    @Schema(description = "Keyword that must be present within recipe cooking instruction. " +
+            "Case insensitive. Multiple keywords could be provided via space separator. " +
+            "The search results will include one or more of provided keywords")
     private String instruction;
 
     @Schema(description = "The number of result page")
