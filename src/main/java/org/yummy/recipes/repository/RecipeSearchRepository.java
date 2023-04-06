@@ -45,10 +45,7 @@ public class RecipeSearchRepository {
             queryBuilder.must(QueryBuilders.termQuery("numberOfServings", recipeQuery.getNumberOfServings()));
         }
         if (recipeQuery.getInstruction() != null){
-
-            //Removing wildcard characters from initial keyword
-            val keyword = recipeQuery.getInstruction().toLowerCase().replace("*", "").replace("?", "");
-            queryBuilder.must(QueryBuilders.wildcardQuery("instruction", String.format("%s*", keyword)));
+            queryBuilder.must(QueryBuilders.matchQuery("instruction", recipeQuery.getInstruction()));
         }
         if (recipeQuery.getIncludedIngredients() != null){
             recipeQuery.getIncludedIngredients().forEach( i -> queryBuilder.must(QueryBuilders.nestedQuery("ingredients", QueryBuilders.termQuery("ingredients.name", i.getName().toLowerCase()), ScoreMode.None)));

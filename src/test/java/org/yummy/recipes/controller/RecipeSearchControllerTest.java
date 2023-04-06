@@ -59,12 +59,12 @@ class RecipeSearchControllerTest {
     public void setup() {
         val recipes = List.of(
                 RecipeDto.builder()
-                .name("For vegans")
-                .instruction("Cook veg dish for two")
-                .vegetarian(true)
-                .numberOfServings(2)
-                .ingredients(List.of(Ingredient.builder().name("RICE").build()))
-                .build(),
+                        .name("For vegans")
+                        .instruction("Cook veg dish for two")
+                        .vegetarian(true)
+                        .numberOfServings(2)
+                        .ingredients(List.of(Ingredient.builder().name("RICE").build()))
+                        .build(),
                 RecipeDto.builder()
                         .name("For meat lovers")
                         .instruction("Let's make BBQ")
@@ -84,7 +84,7 @@ class RecipeSearchControllerTest {
                         .numberOfServings(3)
                         .ingredients(List.of(Ingredient.builder().name("SUGAR").build(), Ingredient.builder().name("milk").build()))
                         .build()
-                );
+        );
         recipeRepository.deleteAll();
         recipes.forEach(r -> recipeService.addRecipe(r));
     }
@@ -127,13 +127,19 @@ class RecipeSearchControllerTest {
     }
 
     @Test
-    void searchWildcard() {
+    void searchForKeywords() {
         val recipes = search(RecipeQuery.builder()
-                .instruction("b?b*Q")
-                .pageNumber(0)
-                .pageSize(1000)
+                .instruction("bbq VEG")
                 .build());
-        assertEquals(1, recipes.size());
+        assertEquals(2, recipes.size());
+    }
+
+    @Test
+    void ignoringPartialKeywordMatchResults() {
+        val recipes = search(RecipeQuery.builder()
+                .instruction("lover")
+                .build());
+        assertEquals(0, recipes.size());
     }
 
     @Test
@@ -175,7 +181,7 @@ class RecipeSearchControllerTest {
         assertEquals(1, limitedResult.size());
     }
 
-    private List<RecipeDto> search(RecipeQuery recipeQuery){
+    private List<RecipeDto> search(RecipeQuery recipeQuery) {
         return Arrays.asList(Objects.requireNonNull(app.testClient(port)
                 .post()
                 .uri("/api/recipes/search")
