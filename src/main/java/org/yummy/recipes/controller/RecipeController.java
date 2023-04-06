@@ -21,6 +21,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/recipes")
+@Validated
 public class RecipeController {
 
     private final RecipeService recipeService;

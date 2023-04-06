@@ -5,12 +5,14 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -24,8 +26,7 @@ import org.yummy.recipes.repository.RecipeRepository;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = YummyRecipes.class)
 @Testcontainers
@@ -100,6 +101,22 @@ class RecipeManagementControllerTest {
         assertEquals(newRecipe.getInstruction(), persistedRecipe.getInstruction());
         assertEquals(newRecipe.getVegetarian(), persistedRecipe.getVegetarian());
         assertEquals(newRecipe.getNumberOfServings(), persistedRecipe.getNumberOfServings());
+    }
+
+    @Test
+    void addRecipeWithSpecifiedId() {
+        val newRecipe = RecipeDto.builder()
+                .id("id")
+                .name("Test Recipe")
+                .instruction("Let's cooking Test Recipe")
+                .vegetarian(false)
+                .numberOfServings(4)
+                .ingredients(List.of(
+                        Ingredient.builder().name("Rise").build(),
+                        Ingredient.builder().name("Meat").build()
+                ))
+                .build();
+        assertThrows(AssertionError.class, () -> persistRecipe(newRecipe));
     }
 
     @Test
