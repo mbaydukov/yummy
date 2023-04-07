@@ -51,8 +51,8 @@ Even though it is built on top of industry-proven technologies, additional confi
 
 ### Build & Run
 
-+ clone repository ```git clone https://github.com/mbaydukov/yummy.git```
-+ switch to the project folder ```cd ./yummy```
++ clone repository ```git clone https://github.com/mbaydukov/yummy.git``` (requires permissions) or unzip downloaded version
++ switch to the project folder
 + build and run docker-compose stack with provided script ```bash run.sh```
 + openapi docs/swagger-ui available by link http://localhost:8080/swagger-ui/index.html
 + application API is available via http://localhost:8080/api/recipes
