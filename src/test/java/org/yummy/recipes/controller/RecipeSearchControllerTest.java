@@ -47,7 +47,8 @@ class RecipeSearchControllerTest {
 
     @Container
     private static final ElasticsearchContainer container = new ElasticsearchContainer(
-            DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch:7.6.2"))
+            DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch").withTag("8.6.2"))
+            .withEnv("xpack.security.enabled", "false")
             .withReuse(false);
 
     @DynamicPropertySource

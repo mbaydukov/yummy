@@ -6,9 +6,10 @@ networks:
 
 services:
   elasticsearch:
-    image: elasticsearch:7.6.2
+    image: elasticsearch:8.6.2
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
     networks:
       - yummy-recipes-net
     healthcheck:
