@@ -14,7 +14,7 @@ import org.yummy.recipes.service.RecipeService;
 import org.yummy.recipes.validation.Create;
 import org.yummy.recipes.validation.Update;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Recipe CRUD controller

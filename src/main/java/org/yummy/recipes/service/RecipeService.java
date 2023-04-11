@@ -8,7 +8,7 @@ import org.yummy.recipes.mapper.RecipeMapper;
 import org.yummy.recipes.repository.RecipeRepository;
 import org.yummy.recipes.repository.RecipeSearchRepository;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 

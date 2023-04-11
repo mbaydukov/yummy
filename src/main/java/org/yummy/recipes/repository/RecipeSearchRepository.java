@@ -1,14 +1,14 @@
 package org.yummy.recipes.repository;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import lombok.val;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Repository;
 import org.yummy.recipes.dto.RecipeQuery;
 import org.yummy.recipes.entity.Recipe;
@@ -36,26 +36,30 @@ public class RecipeSearchRepository {
      * @return collection of recipes that match the request. The result collection is sorted by Recipe.creationTime parameter in descending order
      */
     public List<Recipe> search(RecipeQuery recipeQuery){
-        val queryBuilder = QueryBuilders.boolQuery();
+        val queryBuilder = QueryBuilders.matchAllQueryAsQuery().bool();
 
         if (recipeQuery.getVegetarian() != null) {
-            queryBuilder.must(QueryBuilders.termQuery("vegetarian", recipeQuery.getVegetarian()));
+            queryBuilder.must().add(TermQuery.of(b -> b.field("numberOfServings").value(recipeQuery.getVegetarian()))._toQuery());
         }
         if (recipeQuery.getNumberOfServings() != null){
-            queryBuilder.must(QueryBuilders.termQuery("numberOfServings", recipeQuery.getNumberOfServings()));
+            queryBuilder.must().add(TermQuery.of(b -> b.field("numberOfServings").value(recipeQuery.getNumberOfServings()))._toQuery());
         }
         if (recipeQuery.getInstruction() != null){
-            queryBuilder.must(QueryBuilders.matchQuery("instruction", recipeQuery.getInstruction()));
+            queryBuilder.must().add(MatchQuery.of(b -> b.field("instruction").analyzer(recipeQuery.getInstruction()).operator(Operator.Or))._toQuery());
         }
         if (recipeQuery.getIncludedIngredients() != null){
-            recipeQuery.getIncludedIngredients().forEach( i -> queryBuilder.must(QueryBuilders.nestedQuery("ingredients", QueryBuilders.termQuery("ingredients.name", i.getName().toLowerCase()), ScoreMode.None)));
+            recipeQuery.getIncludedIngredients().forEach( i -> queryBuilder.must().add(NestedQuery.of(v -> v.path("ingredients")
+                    .query(QueryBuilders.termQuery("ingredients.name", i.getName())._toQuery())
+                    .scoreMode(ChildScoreMode.None))._toQuery()));
         }
         if (recipeQuery.getExcludedIngredients() != null){
-            recipeQuery.getExcludedIngredients().forEach( i -> queryBuilder.mustNot(QueryBuilders.nestedQuery("ingredients", QueryBuilders.termQuery("ingredients.name", i.getName().toLowerCase()), ScoreMode.None)));
+            recipeQuery.getIncludedIngredients().forEach( i -> queryBuilder.mustNot().add(NestedQuery.of(v -> v.path("ingredients")
+                    .query(QueryBuilders.termQuery("ingredients.name", i.getName())._toQuery())
+                    .scoreMode(ChildScoreMode.None))._toQuery()));
         }
 
-        return elasticsearchOperations.search(new NativeSearchQueryBuilder()
-                        .withQuery(queryBuilder)
+        return elasticsearchOperations.search(new NativeQueryBuilder()
+                        .withQuery(queryBuilder._toQuery())
                         .withPageable(PageRequest.of(recipeQuery.getPageNumber(), recipeQuery.getPageSize(), Sort.by("creationTime").descending()))
                         .build(), Recipe.class, IndexCoordinates.of(INDEX))
                 .get()

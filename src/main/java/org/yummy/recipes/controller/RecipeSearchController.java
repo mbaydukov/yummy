@@ -13,7 +13,7 @@ import org.yummy.recipes.dto.RecipeQuery;
 import org.yummy.recipes.mapper.RecipeMapper;
 import org.yummy.recipes.service.RecipeService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

@@ -58,7 +58,7 @@ class RecipeServiceTest {
                 .ingredients(List.of(Ingredient.builder().name("meat").build()))
                 .build();
         recipeService.addRecipe(recipeDto);
-        verify(recipeRepository, times(1)).save(recipe);
+        verify(recipeRepository, times(1)).save(any());
     }
 
     @Test

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.yummy.recipes.validation.Create;
 import org.yummy.recipes.validation.Update;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 /**
